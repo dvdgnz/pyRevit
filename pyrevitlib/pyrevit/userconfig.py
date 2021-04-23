@@ -689,7 +689,6 @@ class PyRevitConfig(configparser.PyRevitConfigParser):
     def set_active_cpython_engine(self, pyrevit_engine):
         self.cpython_engine_version = pyrevit_engine.Version
 
-
     def save_changes(self):
         """Save user config into associated config file."""
         if not self._admin:
@@ -697,7 +696,7 @@ class PyRevitConfig(configparser.PyRevitConfigParser):
                 super(PyRevitConfig, self).save()
             except Exception as save_err:
                 mlogger.error('Can not save user config to: %s | %s',
-                              self.config_file, save_err)
+                              self._cfg_file_path, save_err)
 
             # adjust environment per user configurations
             self._update_env()

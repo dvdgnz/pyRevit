@@ -7,6 +7,7 @@ import copy
 
 from pyrevit import HOST_APP, PyRevitException
 from pyrevit import coreutils
+from pyrevit import compat
 from pyrevit.coreutils import yaml
 from pyrevit.coreutils import applocales
 from pyrevit.coreutils import pyutils
@@ -392,8 +393,12 @@ class GenericUIContainer(GenericUIComponent):
             # process any escape characters in target value
             # https://stackoverflow.com/a/4020824/2350244
             # decode('string_escape') for python 2
-            target_value = \
-                target_value.encode('utf-8').decode('string_escape')
+            if compat.PY3:
+                target_value = \
+                    target_value.encode('utf-8').decode('unicode_escape')
+            else:
+                target_value = \
+                    target_value.encode('utf-8').decode('string_escape')
             # create directive obj
             return source_item, LayoutDirective(directive_type=directive,
                                                 target=target_value)

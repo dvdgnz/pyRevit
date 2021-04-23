@@ -257,7 +257,11 @@ namespace PyRevitLabs.PyRevit.Runtime {
             // engine.Setup.Options["Arguments"] = arguments;
             // engine.Runtime.Setup.HostArguments = new List<object>(arguments);
             var sysmodule = Engine.GetSysModule();
+#if IPY3
+            var pythonArgv = new IronPython.Runtime.PythonList();
+#else
             var pythonArgv = new IronPython.Runtime.List();
+#endif
             // for python make sure the first argument is the script
             pythonArgv.append(runtime.ScriptSourceFile);
             pythonArgv.extend(runtime.ScriptRuntimeConfigs.Arguments);

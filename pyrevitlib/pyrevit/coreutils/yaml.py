@@ -2,6 +2,7 @@
 from collections import OrderedDict
 import codecs
 
+from pyrevit import compat
 from pyrevit.framework import StringReader, KeyValuePair
 from pyrevit.labs import libyaml
 
@@ -33,10 +34,11 @@ def load(yaml_file):
     """
     with open(yaml_file, 'r') as yamlfile:
         yamlstr = libyaml.RepresentationModel.YamlStream()
-        yamlstr.Load(
-            StringReader(
-                yamlfile.read().decode('utf-8')
-                ))
+        if compat.PY3:
+            contents = yamlfile.read()
+        else:
+            contents = yamlfile.read().decode('utf-8')
+        yamlstr.Load(StringReader(contents))
         if yamlstr.Documents.Count >= 1:
             return yamlstr.Documents[0].RootNode
 

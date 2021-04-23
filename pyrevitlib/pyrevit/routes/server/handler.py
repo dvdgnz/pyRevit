@@ -1,12 +1,12 @@
 """Revit-aware event handler"""
 #pylint: disable=import-error,invalid-name,broad-except
 import sys
-import urllib2
 import traceback
 import threading
 import json
 
 from pyrevit.api import UI
+from pyrevit.compat import urllib
 from pyrevit.coreutils.logger import get_logger
 from pyrevit.coreutils import moduleutils as modutils
 
@@ -136,9 +136,9 @@ class RequestHandler(UI.IExternalEventHandler):
         # parse response object
         r = RequestHandler.parse_response(response)
         # prepare request
-        req = urllib2.Request(url=callback_url, headers=r.headers, data=r.data)
+        req = urllib.Request(url=callback_url, headers=r.headers, data=r.data)
         # submit request
-        urllib2.urlopen(req).close()
+        urllib.urlopen(req).close()
 
     @staticmethod
     def wants_api_context(handler):

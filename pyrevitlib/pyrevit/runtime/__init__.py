@@ -10,6 +10,7 @@ from pyrevit import framework
 from pyrevit.framework import List, Array
 from pyrevit import api
 from pyrevit import labs
+from pyrevit import compat
 from pyrevit.compat import safe_strtype
 from pyrevit import RUNTIME_DIR
 from pyrevit import coreutils
@@ -272,6 +273,8 @@ def _generate_runtime_asm():
                 get_references()
                 ),
             defines=Array[str]([
+                "PY2" if compat.PY2 else "PY3",
+                "IPY2" if compat.IPY2 else "IPY3",
                 "REVIT{}".format(HOST_APP.version),
                 "REVIT{}".format(HOST_APP.subversion.replace('.', '_'))
                 ]),

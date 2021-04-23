@@ -103,7 +103,7 @@ class ButtonIcons(object):
     def recolour(image_data, size, stride, color):
         # FIXME: needs doc, and argument types
         # ButtonIcons.recolour(image_data, image_size, stride, 0x8e44ad)
-        step = stride / size
+        step = int(stride / size)
         for i in range(0, stride, step):
             for j in range(0, stride, step):
                 idx = (i * size) + j
@@ -142,18 +142,20 @@ class ButtonIcons(object):
         adjusted_icon_size = icon_size * 2
         adjusted_dpi = DEFAULT_DPI * 2
         screen_scaling = HOST_APP.proc_screen_scalefactor
+        image_height = int(adjusted_icon_size * screen_scaling)
+        image_dpi = int(adjusted_dpi * screen_scaling)
 
         self.filestream.Seek(0, IO.SeekOrigin.Begin)
         base_image = Imaging.BitmapImage()
         base_image.BeginInit()
         base_image.StreamSource = self.filestream
-        base_image.DecodePixelHeight = adjusted_icon_size * screen_scaling
+        base_image.DecodePixelHeight = image_height
         base_image.EndInit()
         self.filestream.Seek(0, IO.SeekOrigin.Begin)
 
         image_size = base_image.PixelWidth
         image_format = base_image.Format
-        image_byte_per_pixel = base_image.Format.BitsPerPixel / 8
+        image_byte_per_pixel = int(base_image.Format.BitsPerPixel / 8)
         palette = base_image.Palette
 
         stride = image_size * image_byte_per_pixel
@@ -162,10 +164,10 @@ class ButtonIcons(object):
         base_image.CopyPixels(image_data, stride, 0)
 
         bitmap_source = \
-            Imaging.BitmapSource.Create(adjusted_icon_size * screen_scaling,
-                                        adjusted_icon_size * screen_scaling,
-                                        adjusted_dpi * screen_scaling,
-                                        adjusted_dpi * screen_scaling,
+            Imaging.BitmapSource.Create(image_height,
+                                        image_height,
+                                        image_dpi,
+                                        image_dpi,
                                         image_format,
                                         palette,
                                         image_data,

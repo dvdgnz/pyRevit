@@ -16,11 +16,11 @@ This module manages the telemetry system.
     script module. See `script.get_results()` for examples
 """
 import os.path as op
-import urllib2
 import json
 
 from pyrevit import HOST_APP, PYREVIT_VERSION_APP_DIR, PYREVIT_FILE_PREFIX
 from pyrevit.runtime.types import EventType, EventTelemetry
+from pyrevit.compat import urllib
 from pyrevit import coreutils
 from pyrevit.coreutils.logger import get_logger
 from pyrevit.coreutils import envvars
@@ -31,7 +31,6 @@ from pyrevit.userconfig import user_config
 from pyrevit.labs import PyRevit
 
 from pyrevit.telemetry import events as telemetry_events
-
 
 # templates for telemetry file naming
 FILE_LOG_EXT = 'json'
@@ -197,7 +196,7 @@ def get_status_from_url(server_url):
         server_url = server_url.replace('events/', 'status')
 
     try:
-        return json.loads(urllib2.urlopen(server_url).read())
+        return json.loads(urllib.urlopen(server_url).read())
     except Exception:
         return None
 

@@ -8,7 +8,7 @@ from pyrevit.runtime import RUNTIME_ASSM
 #pylint: disable=import-error,invalid-name,broad-except,wildcard-import
 if not EXEC_PARAMS.doc_mode:
     # import base classes module
-    if compat.PY3:
+    if compat.CPY3:
         clr.AddReference(RUNTIME_ASSM.Location)
     else:
         clr.AddReference(RUNTIME_ASSM)

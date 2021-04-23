@@ -1,6 +1,7 @@
 """Base module for pyRevit config parsing."""
 import json
 import codecs
+from pyrevit import compat
 from pyrevit.compat import configparser
 
 from pyrevit import PyRevitException, PyRevitIOError
@@ -146,9 +147,12 @@ class PyRevitConfigParser(object):
         if self._cfg_file_path:
             try:
                 with codecs.open(self._cfg_file_path, 'r', 'utf-8') as cfg_file:
-                    self._parser.readfp(cfg_file)
-            except (OSError, IOError):
-                raise PyRevitIOError()
+                    if compat.PY3:
+                        self._parser.read_file(cfg_file)
+                    else:
+                        self._parser.readfp(cfg_file)
+            except (OSError, IOError) as read_io_error:
+                raise PyRevitIOError(read_io_error)
             except Exception as read_err:
                 raise PyRevitException(read_err)
 
@@ -229,5 +233,5 @@ class PyRevitConfigParser(object):
             with codecs.open(cfg_file_path \
                     or self._cfg_file_path, 'w', 'utf-8') as cfg_file:
                 self._parser.write(cfg_file)
-        except (OSError, IOError):
-            raise PyRevitIOError()
+        except (OSError, IOError) as write_io_error:
+            raise PyRevitIOError(write_io_error)
